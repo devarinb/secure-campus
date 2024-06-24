@@ -1,0 +1,9 @@
+# Folders
+node_modules/
+dist/
+
+# Env variables
+.env
+development.json
+production.json
+test.json

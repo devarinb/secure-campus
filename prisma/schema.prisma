@@ -1,0 +1,122 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id             String      @id @default(auto()) @map("_id") @db.ObjectId
+  email          String      @unique
+  name           String
+  password       String
+  phoneNumber    String
+  dateOfBirth    DateTime
+  gender         Gender      @default(PREFER_NOT_TO_SAY)
+  streetAddress1 String
+  streetAddress2 String?
+  country        String
+  city           String
+  state          String
+  pincode        String
+  role           Role        @default(STUDENT)
+  FoundItem      FoundItem[]
+  Incident       Incident[]
+  LostItem       LostItem[]
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+  alerts         Alert[]
+
+  Patrol Patrol[]
+}
+
+enum Role {
+  ADMIN
+  STUDENT
+  FACULTY
+  GUARD
+}
+
+enum Gender {
+  MALE
+  FEMALE
+  PREFER_NOT_TO_SAY
+}
+
+model Alert {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+  message   String
+  role      Role
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  userIds String[] @db.ObjectId
+
+  users User @relation(fields: [userIds], references: [id])
+}
+
+model FoundItem {
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  description   String
+  foundByUserId String   @db.ObjectId
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  foundBy User @relation(fields: [foundByUserId], references: [id])
+}
+
+model Incident {
+  id          String         @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  description String
+  status      IncidentStatus @default(OPEN)
+  submitterId String         @db.ObjectId
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+
+  submitter User @relation(fields: [submitterId], references: [id])
+}
+
+enum IncidentStatus {
+  OPEN
+  INVESTIGATING
+  RESOLVED
+}
+
+model LostItem {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  name         String
+  description  String
+  imageUrl     String?
+  reportedById String   @db.ObjectId
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  reportedBy User @relation(fields: [reportedById], references: [id])
+}
+
+model Visitor {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+  purpose   String
+  uniqueId  String   @unique
+  checkIn   DateTime
+  checkOut  DateTime
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Patrol {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String   @db.ObjectId
+  area      String
+  startDate DateTime
+  endDate   DateTime
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id])
+}
