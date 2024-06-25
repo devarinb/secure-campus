@@ -1,4 +1,5 @@
 import { FormEvent, useState } from 'react'
+import { toast } from 'react-toastify'
 
 import './Registration.css'
 
@@ -19,21 +20,6 @@ const Registration = () => {
 
 	const registationHandler = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault()
-
-		console.log({
-			name,
-			email,
-			password,
-			phoneNumber,
-			dateOfBirth,
-			gender,
-			streetAddress1,
-			streetAddress2,
-			country,
-			city,
-			state,
-			pincode
-		})
 
 		const res = await fetch('/api/auth/register', {
 			method: 'POST',
@@ -59,7 +45,25 @@ const Registration = () => {
 		if (res.ok) {
 			const x = await res.json()
 
-			console.log(x)
+			if (x.id) {
+				toast.success('User registered successfully')
+
+				setName('')
+				setEmail('')
+				setPassword('')
+				setPhoneNumber('')
+				setDateOfBirth('')
+				setGender('')
+
+				setStreetAddress1('')
+				setStreetAddress2('')
+				setCountry('')
+				setCity('')
+				setState('')
+				setPincode('')
+			}
+		} else {
+			toast.error('Check your inputs and try again.')
 		}
 	}
 

@@ -1,4 +1,5 @@
 import { FormEvent, useState } from 'react'
+import { toast } from 'react-toastify'
 import './Incident.css'
 
 const Incident = () => {
@@ -8,13 +9,21 @@ const Incident = () => {
 	const incidentReportHandler = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault()
 
-		await fetch('/api/incident/report', {
+		const res = await fetch('/api/incident/report', {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json; charset=utf-8'
 			},
 			body: JSON.stringify({ incidentName, description })
 		})
+
+		if (res.ok && res.status === 201) {
+			toast.success('Incident reported successfully!!')
+			setIncidentName('')
+			setDescription('')
+		} else {
+			toast.error('Failed to report incident. Check your inputs & try again.')
+		}
 	}
 
 	return (

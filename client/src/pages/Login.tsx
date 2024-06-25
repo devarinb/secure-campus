@@ -4,8 +4,8 @@ import { useAuthContext } from '../context/auth'
 import './Login.css'
 
 const Login = () => {
-	const [username, setUsername] = useState('devsnb3@gmail.com')
-	const [password, setPassword] = useState('123456')
+	const [username, setUsername] = useState('')
+	const [password, setPassword] = useState('')
 
 	const { logIn } = useAuthContext()
 
@@ -13,6 +13,9 @@ const Login = () => {
 		e.preventDefault()
 
 		logIn(username, password)
+
+		setUsername('')
+		setPassword('')
 	}
 
 	return (
@@ -40,15 +43,15 @@ const Login = () => {
 							onChange={e => setPassword(e.target.value)}
 						/>
 					</div>
-					<a href='#' className='forget'>
+					{/* <a href='#' className='forget'>
 						Forget Password
-					</a>
+					</a> */}
 					<button className='login' type='submit'>
 						Login
 					</button>
-					<button className='login-guest' type='button'>
+					{/* <button className='login-guest' type='button'>
 						Login as Guest
-					</button>
+					</button> */}
 				</form>
 			</div>
 		</div>

@@ -1,5 +1,6 @@
 import { FormEvent, useState } from 'react'
 import './Visitor.css'
+import { toast } from 'react-toastify'
 
 const Visitor = () => {
 	const [name, setName] = useState('')
@@ -17,7 +18,7 @@ const Visitor = () => {
 			checkOutDate
 		})
 
-		await fetch('/api/visitor/new-visitor', {
+		const res = await fetch('/api/visitor/new-visitor', {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json; charset=utf-8'
@@ -29,6 +30,17 @@ const Visitor = () => {
 				checkOutDate
 			})
 		})
+
+		if (res.ok && res.status === 201) {
+			toast.success('Added visitor to log successfully')
+
+			setName('')
+			setPurpose('')
+			setCheckInDate('')
+			setCheckOutDate('')
+		} else {
+			toast.error('Please check your inputs & try again.')
+		}
 	}
 
 	return (

@@ -1,5 +1,6 @@
 import { FormEvent, useState } from 'react'
 import './LostItem.css'
+import { toast } from 'react-toastify'
 
 const LostItem = () => {
 	const [itemName, setItemName] = useState('')
@@ -9,7 +10,7 @@ const LostItem = () => {
 	const reportLostItemHandler = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault()
 
-		await fetch('/api/lost-item/report', {
+		const res = await fetch('/api/lost-item/report', {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json; charset=utf-8'
@@ -20,6 +21,16 @@ const LostItem = () => {
 				itemPictureUrl
 			})
 		})
+
+		if (res.ok && res.status === 201) {
+			toast.success('Lost item reported successfully.')
+
+			setItemName('')
+			setItemDescription('')
+			setItemPictureUrl('')
+		} else {
+			toast.error('Failed to report lost item. Check your inputs & try again.')
+		}
 	}
 
 	return (

@@ -1,5 +1,6 @@
 import { FormEvent, useState, useEffect } from 'react'
 import './Patrolling.css'
+import { toast } from 'react-toastify'
 
 type Guard = {
 	id: string
@@ -40,7 +41,7 @@ const Patrolling = () => {
 			endDate
 		})
 
-		await fetch('/api/guard/assign-post', {
+		const res = await fetch('/api/guard/assign-post', {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json; charset=utf-8'
@@ -52,6 +53,17 @@ const Patrolling = () => {
 				endDate
 			})
 		})
+
+		if (res.ok && res.status === 201) {
+			toast.success('Assigned guard successfully')
+
+			setGuard('')
+			setArea('')
+			setStartDate('')
+			setEndDate('')
+		} else {
+			toast.error('Please check your inputs & try again!')
+		}
 	}
 
 	return (

@@ -1,5 +1,6 @@
 import { ReactNode, createContext, useContext } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { toast } from 'react-toastify'
 import { useLocalStorage } from '@uidotdev/usehooks'
 
 type Role = 'STUDENT' | 'ADMIN' | 'FACULTY'
@@ -52,19 +53,18 @@ export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
 	const navigate = useNavigate()
 
 	const logIn = async (email: string, password: string) => {
-		console.log({ email, password })
 		const res = await fetch('/api/auth/login', {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json; charset=utf-8'
 			},
 			body: JSON.stringify({
-				username: email,
+				email,
 				password
 			})
 		})
 
-		if (res.ok) {
+		if (res.ok && res.status === 200) {
 			const x = await res.json()
 			if (x.id) {
 				setAuthenticatedUser({
@@ -77,7 +77,10 @@ export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
 				setAuthenticationStatus(true)
 
 				navigate('/admin')
+				toast.success('Successfully logged in.')
 			}
+		} else {
+			toast.error('Check your inputs & try again.')
 		}
 	}
 
@@ -90,6 +93,7 @@ export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
 			setAuthenticationStatus(false)
 			setAuthenticatedUser(null)
 			navigate('/')
+			toast.success('Logged out successfully')
 		}
 	}
 

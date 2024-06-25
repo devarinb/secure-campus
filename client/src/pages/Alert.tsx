@@ -1,4 +1,5 @@
 import { FormEvent, useState } from 'react'
+import { toast } from 'react-toastify'
 import './Alert.css'
 
 const Alert = () => {
@@ -9,7 +10,7 @@ const Alert = () => {
 	const alertUserHandler = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault()
 
-		await fetch('/api/alert/new-alert', {
+		const res = await fetch('/api/alert/new-alert', {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json; charset=utf-8'
@@ -20,6 +21,16 @@ const Alert = () => {
 				group
 			})
 		})
+
+		if (res.ok && res.status === 201) {
+			toast.success('Alert sent to all ' + group)
+
+			setAlertName('')
+			setDescription('')
+			setGroup('')
+		} else {
+			toast.error('Check your inputs & try again')
+		}
 	}
 
 	return (

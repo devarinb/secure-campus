@@ -4,6 +4,7 @@ import prisma from '../lib/prisma'
 import { hash, verify } from '../lib/utils/hash'
 import { signJwt } from '../lib/utils/jwt'
 import BadRequestException from '../exceptions/BadRequestException'
+import { $Enums } from '@prisma/client'
 
 export const registerUser = asyncHandler(async (req, res) => {
 	const {
@@ -17,7 +18,8 @@ export const registerUser = asyncHandler(async (req, res) => {
 		streetAddress2,
 		phoneNumber,
 		dateOfBirth,
-		state
+		state,
+		gender
 	} = req.body
 
 	const userExists = await prisma.user.findFirst({
@@ -44,7 +46,8 @@ export const registerUser = asyncHandler(async (req, res) => {
 			pincode,
 			state,
 			streetAddress1,
-			streetAddress2
+			streetAddress2,
+			gender: $Enums.Gender[gender.toUpperCase()]
 		}
 	})
 
@@ -55,6 +58,8 @@ export const registerUser = asyncHandler(async (req, res) => {
 
 export const login = asyncHandler(async (req, res) => {
 	const { email, password } = req.body
+
+	console.log({ email, password })
 
 	const userExists = await prisma.user.findFirst({
 		where: {

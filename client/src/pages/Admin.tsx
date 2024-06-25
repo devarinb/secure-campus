@@ -45,7 +45,6 @@ const Admin = () => {
 			if (res.ok) {
 				const u = await res.json()
 
-				console.log(u)
 				setUsers(u)
 			}
 		}
