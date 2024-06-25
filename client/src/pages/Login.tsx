@@ -4,8 +4,8 @@ import { useAuthContext } from '../context/auth'
 import './Login.css'
 
 const Login = () => {
-	const [username, setUsername] = useState('devsnb3@gmail.com')
-	const [password, setPassword] = useState('123456')
+	const [username, setUsername] = useState('arindam@gmail.com')
+	const [password, setPassword] = useState('12345678')
 
 	const { logIn } = useAuthContext()
 
